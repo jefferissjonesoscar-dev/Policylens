@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "PolicyLens",
+  "version": "0.1.0",
+  "description": "Summarise the privacy policy or terms of service you're reading in five plain-language points.",
+  "action": {
+    "default_title": "Summarise this policy",
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "icons": { "128": "icon.png" },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["http://localhost:8000/*", "http://127.0.0.1:8000/*"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"]
+}

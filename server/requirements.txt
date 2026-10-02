@@ -1,0 +1,7 @@
+# PolicyLens backend dependencies.
+# Only packages the owner approved (see CLAUDE.md) belong here.
+
+fastapi==0.142.2     # web framework (named by the owner)
+uvicorn==0.54.0      # the server that runs a FastAPI app
+anthropic==1.11.0    # official Claude client (used from Stage 3)
+pypdf==6.19.0        # reads text from PDF files (pure Python, no extra dependencies)

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PolicyLens</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>PolicyLens</h1>
+      <p class="muted">Summarise the policy on this page.</p>
+    </header>
+
+    <button id="analyze" type="button" class="primary">Analyze this page</button>
+
+    <!-- Filled in by popup.js. role="status" lets screen readers announce progress. -->
+    <p id="status" role="status" class="muted" hidden></p>
+    <p id="error" role="alert" class="error" hidden></p>
+    <section id="result" hidden></section>
+
+    <details id="settings">
+      <summary>Settings</summary>
+      <label for="server">PolicyLens server address</label>
+      <input id="server" type="url" placeholder="http://localhost:8000" />
+      <button id="save" type="button">Save</button>
+      <p id="saved" class="muted" hidden>Saved.</p>
+    </details>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
