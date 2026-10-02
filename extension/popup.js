@@ -16,7 +16,7 @@ const CATEGORY_LABELS = {
   sharing: "Who they share it with",
   retention: "How long they keep it",
   user_rights: "Your rights",
-  unusual: "Watch out for",
+  unusual: "⚠ Watch out for",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -106,7 +106,9 @@ function renderResult(result) {
 
   const list = element("ul");
   for (const bullet of result.bullets) {
-    const item = element("li");
+    // The "unusual" bullet is the term most readers wouldn't expect, so it gets a
+    // warning style to stand out from the other four.
+    const item = element("li", bullet.category === "unusual" ? "watch-out" : "");
     item.append(element("p", "category", CATEGORY_LABELS[bullet.category] ?? bullet.category));
     item.append(element("p", "text", bullet.text));
     if (bullet.quote) {
@@ -151,3 +153,7 @@ async function onAnalyzeClick() {
 $("analyze").addEventListener("click", onAnalyzeClick);
 $("save").addEventListener("click", saveServer);
 getServer().then((server) => ($("server").value = server));
+
+// The Chrome Web Store build (make_store_zip.py) may only contact its own server,
+// so changing the server address can't work there: hide that setting.
+if (!chrome.runtime.getManifest().optional_host_permissions) $("settings").hidden = true;

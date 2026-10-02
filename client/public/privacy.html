@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+  PolicyLens privacy policy. Vite copies files in client/public as they are, so
+  once deployed this page is at https://<your-server>/privacy.html. The Chrome
+  Web Store asks for this link when you publish the extension.
+  Keep it accurate: update it whenever the app starts collecting something new.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PolicyLens privacy policy</title>
+    <style>
+      body { max-width: 680px; margin: 0 auto; padding: 24px 16px; font: 16px/1.6 system-ui, sans-serif; color: #111827; }
+      h1 { font-size: 26px; } h2 { font-size: 19px; margin-top: 28px; }
+    </style>
+  </head>
+  <body>
+    <h1>PolicyLens privacy policy</h1>
+    <p>Last updated: 2 October 2026</p>
+
+    <p>PolicyLens summarises privacy policies and terms of service. This page explains what
+      happens to the information you give it, through the website or the Chrome extension.</p>
+
+    <h2>What we receive</h2>
+    <ul>
+      <li><strong>The policy you want summarised.</strong> When you click "Analyze this page" in the
+        extension, it reads the text of the page you are on and sends it to our server. On the
+        website, we receive the text, link or PDF you submit.</li>
+      <li><strong>Your IP address.</strong> Our server sees it with every request, like any website.
+        We use it only to limit how many analyses one person can run.</li>
+    </ul>
+    <p>The extension reads a page only when you click the button. It never reads pages in the
+      background and never collects your browsing history.</p>
+
+    <h2>What we do with it</h2>
+    <ul>
+      <li>The policy text is sent to Anthropic's Claude API, which writes the summary. Anthropic
+        handles it under its <a href="https://www.anthropic.com/legal/commercial-terms">commercial terms</a>
+        and <a href="https://www.anthropic.com/legal/privacy">privacy policy</a>, and does not use it to
+        train its models.</li>
+      <li>We do not save the text you send or the summary we return. We have no database and no
+        user accounts.</li>
+      <li>IP addresses are kept in memory for at most 24 hours for rate limiting, and are also in our
+        hosting provider's standard request logs.</li>
+    </ul>
+
+    <h2>What we don't do</h2>
+    <ul>
+      <li>We don't sell or share your data with anyone, apart from Anthropic as described above.</li>
+      <li>We don't use cookies, analytics or advertising trackers.</li>
+    </ul>
+
+    <h2>Stored on your device</h2>
+    <p>The extension stores one setting in your browser: the address of the PolicyLens server.</p>
+
+    <h2>Changes and contact</h2>
+    <p>If this policy changes, we will update this page and the date above. Questions:
+      <a href="https://github.com/jefferissjonesoscar-dev/Policylens">github.com/jefferissjonesoscar-dev/Policylens</a>.</p>
+  </body>
+</html>

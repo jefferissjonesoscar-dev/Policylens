@@ -17,6 +17,13 @@ By default the extension talks to `http://localhost:8000`. To use a deployed
 server, open **Settings** in the popup and enter its address; Chrome will ask
 you to allow the extension to contact that site.
 
+## Publish to the Chrome Web Store
+
+Run `python extension/make_store_zip.py https://<your-server>` from the repository
+root. It builds `extension/dist/policylens-extension.zip`, which talks only to that
+server and hides the server setting. Then follow
+[docs/chrome-web-store.md](../docs/chrome-web-store.md).
+
 ## Permissions it asks for
 
 - `activeTab` + `scripting`: read the text of the current tab, only when you click the button.
