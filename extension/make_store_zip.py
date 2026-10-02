@@ -9,7 +9,7 @@ copies the extension files into a zip and swaps in that server address:
     no optional "any website" permission, which would slow down store review)
 
 Usage (from the repository root):
-    python extension/make_store_zip.py https://policylens-xxxx.onrender.com
+    python extension/make_store_zip.py https://policylens-xxxx.europe-west1.run.app
 
 The zip is written to extension/dist/policylens-extension.zip.
 """

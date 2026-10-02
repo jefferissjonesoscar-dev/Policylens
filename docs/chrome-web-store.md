@@ -5,10 +5,10 @@ Everything to copy into the Chrome Web Store form, plus the steps.
 ## Before you start
 
 1. The server is online (see "Put it online" in the README) and you know its address,
-   e.g. `https://policylens-xxxx.onrender.com`.
+   e.g. `https://policylens-xxxx.europe-west1.run.app`.
 2. Build the zip from the repository root:
    ```bash
-   python extension/make_store_zip.py https://policylens-xxxx.onrender.com
+   python extension/make_store_zip.py https://policylens-xxxx.europe-west1.run.app
    ```
    This writes `extension/dist/policylens-extension.zip`, set up to talk only to your server.
 3. Register as a Chrome Web Store developer at https://chrome.google.com/webstore/devconsole
@@ -69,7 +69,7 @@ Everything to copy into the Chrome Web Store form, plus the steps.
 **Data usage:** tick **Website content** (the policy text is sent for analysis). Leave everything else unticked.
 Then tick all three certifications (not sold, not used for unrelated purposes, not used for creditworthiness).
 
-**Privacy policy URL:** `https://policylens-xxxx.onrender.com/privacy.html` (your server address + `/privacy.html`).
+**Privacy policy URL:** `https://policylens-xxxx.europe-west1.run.app/privacy.html` (your server address + `/privacy.html`).
 
 ## Distribution tab
 

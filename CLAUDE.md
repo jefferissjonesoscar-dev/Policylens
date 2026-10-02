@@ -43,7 +43,7 @@ and an exact verifying quote per bullet. Full plan: `PLAN.md`.
 - API errors are always `{ "error": { "code": "", "message": "" } }` with plain-English messages a non-developer understands.
 
 ## Commands
-- Hosting: `render.yaml` (Render Blueprint) builds the client and runs the server as one web service.
+- Hosting: the root `Dockerfile` builds the client and runs the server as one container, deployed on Google Cloud Run with max instances 1 (README, "Put it online").
 - Server: `cd server && source .venv/bin/activate && python -m app.main` (port 8000; also serves `client/dist` if it exists)
 - Client: `cd client && npm run dev` (port 5173)
 - Tests: `cd server && python -m unittest`

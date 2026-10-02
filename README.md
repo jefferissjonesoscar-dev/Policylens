@@ -34,18 +34,30 @@ npm run dev                 # http://localhost:5173
 **One server for production:** run `npm run build` in `client/`, then start the backend;
 it serves the built app at http://127.0.0.1:8000 alongside the API.
 
-## Put it online (Render)
+## Put it online (Google Cloud Run)
 
-The repo includes a `render.yaml`, so hosting is a few clicks:
+The `Dockerfile` in the repo root builds the website and the server into one container.
+Cloud Run builds it from GitHub and redeploys on every push to `main`. Low use fits in
+Google Cloud's free tier, but Google needs a billing account (card) on file.
 
-1. Sign in at https://render.com with your GitHub account.
-2. Click **New > Blueprint** and pick this repository.
-3. Paste your `ANTHROPIC_API_KEY` when Render asks for it, then click **Apply**.
+1. Go to https://console.cloud.google.com, create a project (e.g. `policylens`) and
+   set up billing when asked.
+2. Open **Cloud Run** and click **Deploy container**, then choose
+   **Continuously deploy from a repository**, then **Set up with Cloud Build**.
+3. Connect GitHub, pick this repository and branch `main`, choose **Dockerfile**
+   as the build type (path `/Dockerfile`), and save.
+4. Settings:
+   - **Region:** one near your users, e.g. `europe-west1`.
+   - **Authentication:** **Allow public access** (the extension and website need to reach it).
+   - **Scaling:** minimum instances `0`, **maximum instances `1`**. The rate limits are
+     kept in memory, so one instance keeps them accurate, and it also caps the cost.
+   - **Variables & secrets:** add `ANTHROPIC_API_KEY` (your key) and
+     `DAILY_ANALYSIS_LIMIT` (`100`, the most analyses per day for everyone combined).
+5. Click **Create**. When the build finishes, the app's address is shown at the top,
+   like `https://policylens-xxxx.europe-west1.run.app`.
 
-Render builds the website and starts the server; your app is then at
-`https://<name>.onrender.com`. Every push to `main` redeploys it.
-`DAILY_ANALYSIS_LIMIT` (default 100) caps how many analyses run per day for everyone combined.
-Also set a monthly spend limit in the Anthropic Console as a final safety net.
+As safety nets, set a budget alert under **Billing > Budgets & alerts** in Google Cloud,
+and a monthly spend limit in the Anthropic Console.
 
 **Browser extension:** see [extension/README.md](extension/README.md).
 
