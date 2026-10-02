@@ -1,0 +1,24 @@
+# Render Blueprint: hosts PolicyLens as one web service (API + website).
+# In Render: New > Blueprint, pick this repo, then paste your API key when asked.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: policylens
+    runtime: python
+    plan: free            # free instances sleep after ~15 idle minutes; the first request then takes ~1 minute
+    # Build the React site into client/dist, then install the Python packages.
+    # The backend serves client/dist itself, so there is only one server to run.
+    buildCommand: cd client && npm ci && npm run build && cd ../server && pip install -r requirements.txt
+    # Render sends traffic through its own proxy, so --proxy-headers makes the
+    # per-visitor rate limit see each visitor's real IP instead of the proxy's.
+    startCommand: cd server && uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips="*"
+    healthCheckPath: /api/health
+    autoDeploy: true      # redeploy on every push to main
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      - key: ANTHROPIC_API_KEY
+        sync: false       # secret: Render asks for it once and never stores it in the repo
+      - key: DAILY_ANALYSIS_LIMIT
+        value: "100"      # most analyses per day for everyone combined (caps your Claude bill)

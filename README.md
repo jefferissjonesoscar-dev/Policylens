@@ -34,6 +34,19 @@ npm run dev                 # http://localhost:5173
 **One server for production:** run `npm run build` in `client/`, then start the backend;
 it serves the built app at http://127.0.0.1:8000 alongside the API.
 
+## Put it online (Render)
+
+The repo includes a `render.yaml`, so hosting is a few clicks:
+
+1. Sign in at https://render.com with your GitHub account.
+2. Click **New > Blueprint** and pick this repository.
+3. Paste your `ANTHROPIC_API_KEY` when Render asks for it, then click **Apply**.
+
+Render builds the website and starts the server; your app is then at
+`https://<name>.onrender.com`. Every push to `main` redeploys it.
+`DAILY_ANALYSIS_LIMIT` (default 100) caps how many analyses run per day for everyone combined.
+Also set a monthly spend limit in the Anthropic Console as a final safety net.
+
 **Browser extension:** see [extension/README.md](extension/README.md).
 
 ## Tests

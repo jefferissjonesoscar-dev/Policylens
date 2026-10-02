@@ -4,7 +4,7 @@ PolicyLens turns a privacy policy or terms of service into 5 plain-language bull
 and an exact verifying quote per bullet. Full plan: `PLAN.md`.
 
 ## How the owner wants to work
-- Work in **stages** (see PLAN.md). Finish one stage, show the code, then **wait for "next"**. Never start the next stage early.
+- The build was done in **stages** (see PLAN.md). After Stage 4 the owner said to carry on without stopping between stages, so keep working and report results rather than waiting for "next".
 - **Ask before adding any library** not already approved. Approved so far: React, Tailwind, FastAPI, uvicorn, anthropic, pypdf, Vite (+ React and Tailwind plugins). (Update this list as approvals come in.)
 - Explain each major decision in **1–2 sentences**.
 - Keep code **simple and commented**: short functions, one job per file, a comment at the top of each file saying what it does.
@@ -37,12 +37,13 @@ and an exact verifying quote per bullet. Full plan: `PLAN.md`.
 
 ## Endpoints
 - `GET /api/health`, `POST /api/analyze` (`{type: text|url|pdf, value}`; PDF as base64), `POST /api/permissions` (`{permissions}`; no Claude call).
-- Limits live in `server/app/limits.py`: 14 MB body, 300,000 characters of text, 10 analyses per IP per 15 minutes.
+- Limits live in `server/app/limits.py`: 14 MB body, 300,000 characters of text, 10 analyses per IP per 15 minutes, and a server-wide daily cap (`DAILY_ANALYSIS_LIMIT`, default 100).
 
 ## Errors
 - API errors are always `{ "error": { "code": "", "message": "" } }` with plain-English messages a non-developer understands.
 
 ## Commands
+- Hosting: `render.yaml` (Render Blueprint) builds the client and runs the server as one web service.
 - Server: `cd server && source .venv/bin/activate && python -m app.main` (port 8000; also serves `client/dist` if it exists)
 - Client: `cd client && npm run dev` (port 5173)
 - Tests: `cd server && python -m unittest`

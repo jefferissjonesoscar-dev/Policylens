@@ -60,6 +60,9 @@ class ApiTests(unittest.TestCase):
         limiter = patch.object(limits, "analyze_rate_limiter", SlidingWindowRateLimiter(100, 60))
         limiter.start()
         self.addCleanup(limiter.stop)
+        daily = patch.object(limits, "daily_rate_limiter", SlidingWindowRateLimiter(100, 60))
+        daily.start()
+        self.addCleanup(daily.stop)
         # Replace the paid analysis step with a stand-in that records what it was given.
         self.analyzed_texts = []
 
@@ -165,6 +168,16 @@ class ApiTests(unittest.TestCase):
 
         self.assert_error(status, body, 429, "rate_limited")
         self.assertTrue(0 < int(headers["retry-after"]) <= 600)
+
+    def test_daily_cap_applies_to_everyone_combined(self):
+        cap = SlidingWindowRateLimiter(1, limits.DAILY_WINDOW_SECONDS, limits.DAILY_LIMIT_MESSAGE)
+        with patch.object(limits, "daily_rate_limiter", cap):
+            status, _, _ = self.request("POST", "/api/analyze", {"type": "text", "value": POLICY_TEXT})
+            self.assertEqual(status, 200)
+            status, body, _ = self.request("POST", "/api/analyze", {"type": "text", "value": POLICY_TEXT})
+
+        self.assert_error(status, body, 429, "rate_limited")
+        self.assertIn("daily limit", body["error"]["message"])
 
     # --- Errors from later steps ---
 

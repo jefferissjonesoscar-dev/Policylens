@@ -48,6 +48,10 @@ class Settings:
         self.anthropic_model = os.environ.get("ANTHROPIC_MODEL", "").strip() or DEFAULT_MODEL
         self.port = int(os.environ.get("PORT", "8000"))
 
+        # Most analyses the whole server will run in 24 hours, across all visitors.
+        # It caps your Claude bill if the public site or extension gets popular (or abused).
+        self.daily_analysis_limit = int(os.environ.get("DAILY_ANALYSIS_LIMIT", "100"))
+
         # Fail fast with a clear message instead of a confusing error at the first request.
         if not self.anthropic_api_key:
             raise RuntimeError(

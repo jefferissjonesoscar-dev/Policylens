@@ -6,6 +6,9 @@ address) we remember the times of their recent requests and refuse a new one if
 there are already too many in the window. It's written by hand instead of using a
 library because it's about 30 lines.
 
+There are two limiters: one per visitor, and one server-wide daily cap that
+bounds the total Claude bill.
+
 Two limitations to know about:
   - Counts live in this process's memory, so they reset when the server restarts,
     and each server process keeps its own counts if you run several.
@@ -20,6 +23,7 @@ from collections import defaultdict, deque
 
 from fastapi import Request
 
+from app.config import settings
 from app.errors import RateLimitError
 
 # Largest request body we accept. The biggest legitimate body is a 10 MB PDF,
@@ -39,12 +43,22 @@ RATE_LIMIT_REQUESTS = 10
 RATE_LIMIT_WINDOW_SECONDS = 15 * 60
 
 
+# Spending cap: the most analyses the whole server runs per 24 hours, for everyone
+# combined (set with DAILY_ANALYSIS_LIMIT). The per-IP limit above stops one visitor
+# hogging the service; this one bounds the total Claude bill even if many visitors
+# (or one visitor faking many IP addresses) use it at once.
+DAILY_WINDOW_SECONDS = 24 * 60 * 60
+DAILY_LIMIT_MESSAGE = ("PolicyLens has reached its daily limit of analyses. "
+                       "Please try again tomorrow.")
+
+
 class SlidingWindowRateLimiter:
     """Allows at most max_requests per key within any window_seconds period."""
 
-    def __init__(self, max_requests: int, window_seconds: float) -> None:
+    def __init__(self, max_requests: int, window_seconds: float, message: str | None = None) -> None:
         self.max_requests = max_requests
         self.window_seconds = window_seconds
+        self.message = message  # None means RateLimitError's default wording
         self._requests: dict[str, deque[float]] = defaultdict(deque)
         # FastAPI runs our (non-async) route functions on several threads at once,
         # so the shared dictionary needs a lock.
@@ -61,15 +75,19 @@ class SlidingWindowRateLimiter:
 
             if len(timestamps) >= self.max_requests:
                 retry_after = int(timestamps[0] + self.window_seconds - now) + 1
-                raise RateLimitError(retry_after)
+                raise RateLimitError(retry_after, self.message)
 
             timestamps.append(now)
 
 
 analyze_rate_limiter = SlidingWindowRateLimiter(RATE_LIMIT_REQUESTS, RATE_LIMIT_WINDOW_SECONDS)
+daily_rate_limiter = SlidingWindowRateLimiter(
+    settings.daily_analysis_limit, DAILY_WINDOW_SECONDS, DAILY_LIMIT_MESSAGE)
 
 
 def limit_analyze_requests(request: Request) -> None:
-    """FastAPI dependency: apply the rate limit to the caller's IP address."""
+    """FastAPI dependency: apply the per-IP limit, then the server-wide daily cap."""
     client_ip = request.client.host if request.client else "unknown"
     analyze_rate_limiter.check(client_ip)
+    # One shared key, so every visitor counts towards the same daily total.
+    daily_rate_limiter.check("everyone")
